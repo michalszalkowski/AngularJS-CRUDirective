@@ -1,0 +1,55 @@
+<div class="panel panel-default">
+
+	<div class="panel-heading">
+		<h3 class="panel-title">{{collectionName}}</h3>
+		<nav class="pull-right">
+			<a href="" ng-click="actionCreate()" type="button" class="btn btn-info btn-sm">Add new {{collectionName}}</a>
+			<a href="" ng-click="actionList()" type="button" class="btn btn-info btn-sm">List of {{collectionName}}</a>
+		</nav>
+	</div>
+
+	<div ng-show="message" class="alert alert-success" role="alert">{{message}}</div>
+
+	<div id="list" class="panel-body" ng-show="viewMode == 'list'">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th ng-repeat="header in list.config.headers">{{header}}</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat="row in list.rows">
+
+				<td ng-repeat="cell in row">
+					{{cell}}
+				</td>
+
+				<td>
+					<span class="pull-right">
+						<a href="" ng-click="actionDetails(row._id)" type="button" class="btn btn-success btn-sm">details</a>
+						<a href="" ng-click="actionRemove(row._id)" type="button" class="btn btn-danger btn-sm">remove</a>
+					</span>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div id="details" class="panel-body" ng-show="viewMode == 'details'">
+		<div class="form-group" ng-repeat="field in details.fields">
+			<label ng-show="field.type != 'hidden'">{{field.label}}</label>
+			<input type="{{field.type}}" ng-model="details.document[field.name]" class="form-control"/>
+		</div>
+		<a href="" ng-click="actionUpdate()" type="button" class="btn btn-success btn-sm">Update {{collectionName}}</a>
+	</div>
+
+	<div id="form" class="panel-body" ng-show="viewMode == 'create'">
+		<div class="form-group" ng-repeat="field in details.fields">
+			<label ng-show="field.type != 'hidden'">{{field.label}}</label>
+			<input type="{{field.type}}" ng-model="details.document[field.name]" class="form-control"/>
+		</div>
+		<a href="" ng-click="actionSave()" type="button" class="btn btn-success btn-sm">Save new {{collectionName}}</a>
+	</div>
+
+</div>
