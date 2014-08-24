@@ -1,8 +1,6 @@
 var express = require('express');
 
-var Entity = require('./entityManager').model;
-var entityForm = require('./entityManager').form;
-var entityList = require('./entityManager').list;
+var Entity = require('./entityManager');
 
 module.exports.init = function () {
 
@@ -13,10 +11,9 @@ module.exports.init = function () {
 
 		var collectionName = req.params.collectionName;
 
-		var entity = new Entity[collectionName]();
-		var form = entityForm[collectionName];
+		var entity = new Entity.getModel(collectionName)();
 
-		form.forEach(function (item) {
+		Entity.getForm(collectionName).forEach(function (item) {
 			if(item.name == '_id') return;
 			entity[item.name] = req.body[item.name];
 		});
@@ -35,13 +32,13 @@ module.exports.init = function () {
 
 		var collectionName = req.params.collectionName;
 
-		Entity[collectionName].find().select('-__v').exec(function (err, article) {
+		Entity.getModel(collectionName).find().select('-__v').exec(function (err, article) {
 			if (err) {
 				res.send(err);
 			}
 			res.json({
 				"config": {
-					"headers": entityList[req.params.collectionName]
+					"headers": Entity.getList(collectionName)
 				},
 				"rows": article
 			});
@@ -53,13 +50,13 @@ module.exports.init = function () {
 
 		var collectionName = req.params.collectionName;
 
-		Entity[collectionName].findById(req.params.id, function (err, entity) {
+		Entity.getModel(collectionName).findById(req.params.id, function (err, entity) {
 			if (err) {
 				res.send(err);
 			}
 			res.json({
 				"config": {
-					"fields": entityForm[req.params.collectionName]
+					"fields": Entity.getForm(collectionName)
 				},
 				"document": entity
 			});
@@ -73,7 +70,7 @@ module.exports.init = function () {
 
 		res.json({
 			"config": {
-				"fields": entityForm[collectionName]
+				"fields": Entity.getForm(collectionName)
 			},
 			"document": {}
 		});
@@ -83,13 +80,12 @@ module.exports.init = function () {
 	routerApi.route('/:collectionName/id/:id').put(function (req, res) {
 
 		var collectionName = req.params.collectionName;
-		var form = entityForm[collectionName];
 
-		Entity[collectionName].findById(req.params.id, function (err, entity) {
+		Entity.getModel(collectionName).findById(req.params.id, function (err, entity) {
 			if (err) {
 				res.send(err);
 			}
-			form.forEach(function (item) {
+			Entity.getForm(collectionName).forEach(function (item) {
 				if(item.name == '_id') return;
 				entity[item.name] = req.body[item.name];
 			});
@@ -109,7 +105,7 @@ module.exports.init = function () {
 
 		var collectionName = req.params.collectionName;
 
-		Entity[collectionName].remove({
+		Entity.getModel(collectionName).remove({
 			_id: req.params.id
 		}, function (err, article) {
 			if (err) {

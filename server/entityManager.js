@@ -1,20 +1,24 @@
-var Article = require('./entity/article').model;
-var articleForm = require('./entity/article').form;
-var articleList = require('./entity/article').list;
+var model = {};
+var form = {};
+var list = {};
 
-var Post = require('./entity/post').model;
-var postForm = require('./entity/post').form;
-var postList = require('./entity/post').list;
+module.exports.getModel = function (collectionName) {
+	if (model[collectionName] == undefined) {
+		model[collectionName] = require('./entity/' + collectionName).model;
+	}
+	return model[collectionName];
+};
 
+module.exports.getList = function (collectionName) {
+	if (list[collectionName] == undefined) {
+		list[collectionName] = require('./entity/' + collectionName).list;
+	}
+	return list[collectionName];
+};
 
-module.exports.model = {};
-module.exports.form = {};
-module.exports.list = {};
-
-module.exports.model['article'] = Article;
-module.exports.form['article'] = articleForm;
-module.exports.list['article'] = articleList;
-
-module.exports.model['post'] = Post;
-module.exports.form['post'] = postForm;
-module.exports.list['post'] = postList;
+module.exports.getForm = function (collectionName) {
+	if (form[collectionName] == undefined) {
+		form[collectionName] = require('./entity/' + collectionName).form;
+	}
+	return form[collectionName];
+};
